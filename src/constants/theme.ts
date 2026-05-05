@@ -131,5 +131,8 @@ export const TabBar = {
   iconSize: 18,
 } as const;
 
-export const BottomTabInset = 112;
+export const BottomTabInset = Platform.select({
+  default: 32,
+  web: 112,
+});
 export const MaxContentWidth = 720;

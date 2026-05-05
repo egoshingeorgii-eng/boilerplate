@@ -1,4 +1,5 @@
 import { GlassView, isGlassEffectAPIAvailable } from 'expo-glass-effect';
+import * as Haptics from 'expo-haptics';
 import { SymbolView } from 'expo-symbols';
 import React from 'react';
 import { Platform, Pressable, StyleSheet, Text, View, type GestureResponderEvent } from 'react-native';
@@ -34,6 +35,13 @@ export function AppleGlassButton({
   const canUseGlass = Platform.OS === 'ios' && isGlassEffectAPIAvailable();
   const tintColor = selected || variant === 'accent' ? theme.accentSoft : theme.surface;
   const contentColor = selected || variant === 'accent' ? theme.text : theme.textSecondary;
+  const handlePress = (event: GestureResponderEvent) => {
+    if (onPress && Platform.OS !== 'web') {
+      void Haptics.selectionAsync();
+    }
+
+    onPress?.(event);
+  };
 
   const content = (
     <>
@@ -53,9 +61,10 @@ export function AppleGlassButton({
     <Pressable
       accessibilityLabel={accessibilityLabel ?? label}
       accessibilityRole="button"
+      accessibilityState={{ disabled, selected }}
       disabled={disabled}
       onLongPress={onLongPress}
-      onPress={onPress}
+      onPress={handlePress}
       style={({ pressed }) => [
         size === 'compact' ? styles.pressableCompact : styles.pressable,
         disabled ? styles.disabled : null,
@@ -141,7 +150,7 @@ function createStyles(theme: AppTheme) {
       ...Typography.label,
     },
     pressed: {
-      opacity: 0.76,
+      transform: [{ scale: 0.98 }],
     },
     disabled: {
       opacity: 0.35,

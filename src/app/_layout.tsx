@@ -1,3 +1,5 @@
+import 'expo-dev-client';
+
 import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { Stack } from 'expo-router';
@@ -6,6 +8,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect, useMemo } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
+import { AppKeyboardProvider } from '@/components/keyboard-controller-provider';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useTheme } from '@/hooks/use-theme';
 
@@ -38,12 +41,14 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <ThemeProvider value={navigationTheme}>
-        <BottomSheetModalProvider>
-          <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: theme.background } }} />
-          <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-        </BottomSheetModalProvider>
-      </ThemeProvider>
+      <AppKeyboardProvider>
+        <ThemeProvider value={navigationTheme}>
+          <BottomSheetModalProvider>
+            <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: theme.background } }} />
+            <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+          </BottomSheetModalProvider>
+        </ThemeProvider>
+      </AppKeyboardProvider>
     </GestureHandlerRootView>
   );
 }
